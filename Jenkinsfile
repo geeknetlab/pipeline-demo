@@ -5,6 +5,7 @@ pipeline {
       steps {
         sh './jenkins/build.sh'
         archiveArtifacts(artifacts: 'target/**/*.jar', fingerprint: true)
+        echo 'I am a $BUZZ_NAME'
       }
     }
 
