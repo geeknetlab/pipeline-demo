@@ -10,6 +10,7 @@ pipeline {
 
     stage('Buzz Test') {
       steps {
+        sh './jenkins/test-all.sh'
         junit '**/surefire-reports/**/*.xml'
       }
     }
