@@ -12,22 +12,16 @@ pipeline {
 
     stage('Buzz Test') {
       parallel {
-        stage('Buzz Test') {
+        stage('Testing A') {
           steps {
             sh './jenkins/test-all.sh'
             junit '**/surefire-reports/**/*.xml'
           }
         }
 
-        stage('Testing A') {
-          steps {
-            sh 'sleep 10; echo done'
-          }
-        }
-
         stage('Testing B') {
           steps {
-            sh 'sleep 20; echo done'
+            sh 'sleep 10; echo done'
           }
         }
 
