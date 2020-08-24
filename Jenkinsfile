@@ -36,8 +36,10 @@ pipeline {
             stash(name: 'Buzz Java 8', includes: 'target/**')
           }
         }
+
       }
-      }
+    }
+
     stage('Buzz Test') {
       parallel {
         stage('Testing A 7') {
@@ -93,7 +95,9 @@ pipeline {
             sh './jenkins/test-all.sh'
           }
         }
+
       }
     }
+
   }
 }
