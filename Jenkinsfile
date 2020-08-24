@@ -99,5 +99,11 @@ pipeline {
       }
     }
 
+    stage('Confirm Deploy to Staging') {
+      steps {
+        input(message: 'Deploy to Stage', ok: 'yes, let\'s do it', submitterParameter: 'butler')
+      }
+    }
+
   }
 }
