@@ -95,3 +95,4 @@ pipeline {
             sh './jenkins/test-all.sh'
           }
         }
+      }
