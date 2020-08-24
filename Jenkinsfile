@@ -8,5 +8,11 @@ pipeline {
       }
     }
 
+    stage('Buzz Test') {
+      steps {
+        junit '**/surefire-reports/**/*.xml'
+      }
+    }
+
   }
 }
