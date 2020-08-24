@@ -38,8 +38,6 @@ pipeline {
         }
 
       }
-    }
-
     stage('Buzz Test') {
       parallel {
         stage('Testing A 7') {
@@ -96,3 +94,7 @@ pipeline {
           }
         }
       }
+    }
+   }
+  }
+}
