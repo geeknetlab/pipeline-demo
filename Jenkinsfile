@@ -16,4 +16,7 @@ pipeline {
     }
 
   }
+  environment {
+    BUZZ_NAME = 'Worker bee'
+  }
 }
