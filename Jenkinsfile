@@ -5,25 +5,20 @@ node{
         sh label: '', script: './jenkins/build.sh'
         archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
       }
-
-    stage('Test') {
-      parallel {
-        stage('Backend'){
+    stage('BackendTest'){
         sh './jenkins/test-backend.sh'
         junit 'target/surefire-reports/**/TEST*.xml'
       }
-      stage('Frontend'){
+    stage('FrontendTest'){
         sh './jenkins/test-frontend.sh'
         junit 'target/test-results/**/TEST*.xml'        
       }
-      stage('Performance'){
+    stage('PerformanceTest'){
         sh './jenkins/test-performance.sh'
       }
-      stage('Static'){
+    stage('StaticTest'){
         sh './jenkins/test-static.sh'
       }
-     }
-    }
     stage('Deploy'){
       sh './jenkins/deploy.sh staging'
   }
