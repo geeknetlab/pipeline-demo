@@ -36,7 +36,7 @@ pipeline {
             stash(name: 'Buzz Java 8', includes: 'target/**')
           }
         }
-
+      }
       }
     stage('Buzz Test') {
       parallel {
@@ -95,6 +95,5 @@ pipeline {
         }
       }
     }
-   }
   }
 }
