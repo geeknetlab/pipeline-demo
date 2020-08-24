@@ -1,18 +1,20 @@
-pipeline {
   agent any
   stages {
-    stage('Buzz Buzz') {
+    stage('Build') {
       steps {
-        echo 'Bees Buzz!!'
+        echo 'Build my code'
       }
     }
 
-    stage('Bees Bees') {
+    stage('Test') {
       steps {
         echo 'Buzz, Bees, Buzz!!'
         echo 'Bees Buzzing!'
       }
     }
-
+    
+    stage('Deploy'){
+        steps {
+    }
   }
 }
