@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Buzz Build') {
       steps {
-        sh 'echo I am a $BUZZ_NAME'
+        sh 'echo I am a ${BUZZ_NAME}'
         sh '''
 ./jenkins/build.sh'''
         archiveArtifacts(artifacts: 'target/**/*.jar', fingerprint: true)
