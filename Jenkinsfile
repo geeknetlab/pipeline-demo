@@ -95,12 +95,3 @@ pipeline {
             sh './jenkins/test-all.sh'
           }
         }
-
-      }
-    }
-
-  }
-  environment {
-    BUZZ_NAME = 'Worker bee'
-  }
-}
