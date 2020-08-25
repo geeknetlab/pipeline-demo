@@ -1,25 +1,122 @@
-node{
-    stage('Build') {
-        echo 'Build my code'
-        git branch: 'scripted-pipeline', credentialsId: 'gkn_github', url: 'git@github.com:geeknetlab/pipeline-demo.git'
-        sh label: '', script: './jenkins/build.sh'
-        archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+pipeline {
+  agent none
+  stages {
+    stage('Buzz Build') {
+      parallel {
+        stage('Build Java 7') {
+          agent {
+            node {
+              label 'java7'
+            }
+
+          }
+          steps {
+            sh 'echo I am a ${BUZZ_NAME}'
+            sh '''
+./jenkins/build.sh'''
+            archiveArtifacts(artifacts: 'target/**/*.jar', fingerprint: true)
+            stash(name: 'Buzz Java 7', includes: 'target/**')
+          }
+        }
+
+        stage('Build Java 8') {
+          agent {
+            node {
+              label 'java8'
+            }
+
+          }
+          environment {
+            BUZZ_NAME = 'Java 8 Bee'
+          }
+          steps {
+            sh './jenkins/build.sh'
+            archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
+            sh 'echo I am a ${BUZZ_NAME}'
+            stash(name: 'Buzz Java 8', includes: 'target/**')
+          }
+        }
+
       }
-    stage('BackendTest'){
-        sh './jenkins/test-backend.sh'
-        junit 'target/surefire-reports/**/TEST*.xml'
+    }
+
+    stage('Buzz Test') {
+      parallel {
+        stage('Testing A 7') {
+          agent {
+            node {
+              label 'java7'
+            }
+
+          }
+          steps {
+            unstash 'Buzz Java 7'
+            sh './jenkins/test-all.sh'
+            junit '**/surefire-reports/**/*.xml'
+          }
+        }
+
+        stage('Testing A 8') {
+          agent {
+            node {
+              label 'java8'
+            }
+
+          }
+          steps {
+            unstash 'Buzz Java 8'
+            sh './jenkins/test-all.sh'
+            junit '**/surefire-reports/**/*.xml'
+          }
+        }
+
+        stage('Testing B 7') {
+          agent {
+            node {
+              label 'java7'
+            }
+
+          }
+          steps {
+            unstash 'Buzz Java 7'
+            sh './jenkins/test-all.sh'
+          }
+        }
+
+        stage('Testing B 8') {
+          agent {
+            node {
+              label 'java8'
+            }
+
+          }
+          steps {
+            unstash 'Buzz Java 8'
+            sh './jenkins/test-all.sh'
+          }
+        }
+
       }
-    stage('FrontendTest'){
-        sh './jenkins/test-frontend.sh'
-        junit 'target/test-results/**/TEST*.xml'        
+    }
+
+    stage('Confirm Deploy to Staging') {
+      steps {
+        input(message: 'Deploy to Stage', ok: 'yes, let\'s do it', submitterParameter: 'butler')
       }
-    stage('PerformanceTest'){
-        sh './jenkins/test-performance.sh'
+    }
+
+    stage('Deploy to Staging') {
+      agent {
+        node {
+          label 'java8'
+        }
+
       }
-    stage('StaticTest'){
-        sh './jenkins/test-static.sh'
+      steps {
+        unstash 'Buzz Java 8'
+        sh './jenkins/deploy.sh staging'
       }
-    stage('Deploy'){
-      sh './jenkins/deploy.sh staging'
+    }
+
   }
 }
